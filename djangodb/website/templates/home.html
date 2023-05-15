@@ -1,0 +1,26 @@
+<style>
+    strong {
+        font-size: 1.2em;
+        color: #333;
+    }
+    
+    p {
+        font-size: 1em;
+        color: #666;
+    }
+</style>
+{% extends "base.html" %}
+{% block content %}
+<br/>
+<h1>Chemical Database</h1>
+<br/>
+{% for chem in all %}
+    <div>
+        <strong>{{ chem.labitemname }}</strong>
+        <p>Type: {{ chem.labitemtype }}</p>
+        <p>Subtype: {{ chem.labitemsubtype }}</p>
+        <p>ID: {{ chem.labitemid }}</p>
+    </div>
+{% endfor %}
+{% endblock %}
+

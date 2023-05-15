@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Input your chemical data</h1>
+
+<br/>
+<form method="POST" action="{% url 'input' %}">
+    {% csrf_token %}
+    <div class="mb-3">
+      <input type="text" class="form-control" id="exampleInput1" aria-describedby="emailHelp" placeholder="lab item type" name="labitemtype" value = "{{ labitemtype }}">
+      </div>
+    <div class="mb-3">
+     <input type="text" class="form-control" id="exampleInput2" placeholder="lab item subtype" name="labitemsubtype" value = "{{ labitemsubtype }}">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="exampleInput3" placeholder="lab item id" name="labitemid" value = "{{ labitemid }}">
+       </div>
+    <div class="mb-3">
+    <input type="text" class="form-control" id="exampleInput4" placeholder="lab item name" name="labitemname" value = "{{ labitemname }}">
+    </div>
+   <br/>
+    <button type="submit" class="btn btn-secondary">Submit</button>
+  </form>
+{% endblock %}
