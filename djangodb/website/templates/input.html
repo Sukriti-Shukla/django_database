@@ -3,21 +3,55 @@
 <h1>Input your chemical data</h1>
 
 <br/>
-<form method="POST" action="{% url 'input' %}">
+<form method="POST" action="{% url 'input' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="mb-3">
-      <input type="text" class="form-control" id="exampleInput1" aria-describedby="emailHelp" placeholder="lab item type" name="labitemtype" value = "{{ labitemtype }}">
-      </div>
-    <div class="mb-3">
-     <input type="text" class="form-control" id="exampleInput2" placeholder="lab item subtype" name="labitemsubtype" value = "{{ labitemsubtype }}">
+        <input type="text" class="form-control" id="exampleInput1" aria-describedby="emailHelp" placeholder="lab item type" name="labitemtype" value="{{ form.labitemtype.value }}">
     </div>
     <div class="mb-3">
-        <input type="text" class="form-control" id="exampleInput3" placeholder="lab item id" name="labitemid" value = "{{ labitemid }}">
-       </div>
-    <div class="mb-3">
-    <input type="text" class="form-control" id="exampleInput4" placeholder="lab item name" name="labitemname" value = "{{ labitemname }}">
+        <input type="text" class="form-control" id="exampleInput2" placeholder="lab item subtype" name="labitemsubtype" value="{{ form.labitemsubtype.value }}">
     </div>
-   <br/>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="exampleInput3" placeholder="lab item id" name="labitemid" value="{{ form.labitemid.value }}">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="exampleInput4" placeholder="lab item name" name="labitemname" value="{{ form.labitemname.value }}">
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Related docs</label>
+        <input class="form-control" type="file" id="formFile" name="documents" value="{{ form.documents.value }}">
+    </div>
+
+    <div id="additional-fields">
+        <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Additional Field Name" name="additional_field_name_1">
+            <input type="text" class="form-control" placeholder="Additional Field Value" name="additional_field_value_1">
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-secondary" id="add-field-button">Add Field</button>
     <button type="submit" class="btn btn-secondary">Submit</button>
-  </form>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var additionalFieldsCount = 1;
+
+    function addAdditionalField() {
+        additionalFieldsCount++;
+        var additionalFieldHtml = `
+            <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Additional Field Name" name="additional_field_name_${additionalFieldsCount}">
+                <input type="text" class="form-control" placeholder="Additional Field Value" name="additional_field_value_${additionalFieldsCount}">
+            </div>
+        `;
+        $("#additional-fields").append(additionalFieldHtml);
+    }
+
+    $(document).ready(function() {
+        $("#add-field-button").click(function() {
+            addAdditionalField();
+        });
+    });
+</script>
 {% endblock %}

@@ -9,6 +9,7 @@
         color: #666;
     }
 </style>
+
 {% extends "base.html" %}
 {% block content %}
 <br/>
@@ -20,7 +21,11 @@
         <p>Type: {{ chem.labitemtype }}</p>
         <p>Subtype: {{ chem.labitemsubtype }}</p>
         <p>ID: {{ chem.labitemid }}</p>
+        <p>Additional fileds: {{ chem.json_data}}</p>
+        {% if chem.documents %}
+        <img src = "{{ chem.documents.url }}" style="width: 5vw; min-width: 33px;">
+        {% endif %}
+
     </div>
 {% endfor %}
 {% endblock %}
-
