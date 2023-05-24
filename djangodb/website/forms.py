@@ -4,7 +4,7 @@ from .models import Chemical
 class ChemicalForm(forms.ModelForm):
     class Meta:
         model = Chemical
-        fields = ['labitemtype','labitemsubtype','labitemid','labitemname', 'documents', 'json_data']
+        fields = ['labitemtype','labitemsubtype','labitemid','labitemname', 'documents', 'files', 'json_data','additional_fields','custom_fields']
 
 class SearchForm(forms.Form):
     query = forms.CharField(label='Search')

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .custom-field-key {
+        display: none;
+    }
+</style>
+
+<h1>Input your chemical data</h1>
+
+<br/>
+<form method="POST" action="{% url 'input' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <input type="text" class="form-control" id="exampleInput1" aria-describedby="emailHelp" placeholder="lab item type" name="labitemtype" value="{{ form.labitemtype.value }}">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="exampleInput2" placeholder="lab item subtype" name="labitemsubtype" value="{{ form.labitemsubtype.value }}">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="exampleInput3" placeholder="lab item id" name="labitemid" value="{{ form.labitemid.value }}">
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" id="exampleInput4" placeholder="lab item name" name="labitemname" value="{{ form.labitemname.value }}">
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label">Related docs</label>
+        <input class="form-control" type="file" id="formFile" name="documents" value="{{ form.documents.value }}">
+    </div>
+   
+    <h3>Additional Fields</h3>
+    <table id="additional-fields" class="table">
+        <thead>
+            <tr>
+                <th>Field Name</th>
+                <th>Field Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Additional field rows go here -->
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-secondary" id="add-field-button">Add Field</button>
+    <button type="submit" class="btn btn-secondary">Submit</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var additionalFieldsCount = 1;
+
+    function addAdditionalField() {
+        additionalFieldsCount++;
+        var additionalFieldHtml = `
+            <tr>
+                <td>
+                    <select class="form-control additional-field-key" name="additional_field_name_${additionalFieldsCount}">
+                        <option value="">Select Field Key</option>
+                        <option value="field1">Field 1</option>
+                        <option value="field2">Field 2</option>
+                        <option value="field3">Field 3</option>
+                        <option value="custom">Custom Field</option>
+                        {% for chem in all %}
+                        {% for field in chem.custom_fields %}
+                        <option value="{{ field }}">{{ field }}</option>
+                        {% endfor %}
+                        {% endfor %}
+                    </select>
+                    <input type="text" class="form-control custom-field-key" placeholder="Custom Field Name" name="custom_field_key_${additionalFieldsCount}" style="display: none;">
+                </td>
+                <td>
+                    <input type="text" class="form-control" placeholder="Additional Field Value" name="additional_field_value_${additionalFieldsCount}">
+                </td>
+            </tr>
+        `;
+        $("#additional-fields tbody").append(additionalFieldHtml);
+    }
+
+    function handleAdditionalFieldKeyChange() {
+        var selectedValue = $(this).val();
+        var customFieldInput = $(this).siblings(".custom-field-key");
+
+        if (selectedValue === "custom") {
+            customFieldInput.show();
+        } else {
+            customFieldInput.hide();
+        }
+    }
+
+    $(document).ready(function() {
+        $("#add-field-button").click(function() {
+            addAdditionalField();
+        });
+
+        $(document).on("change", ".additional-field-key", handleAdditionalFieldKeyChange);
+    });
+</script>
+{% endblock %}
