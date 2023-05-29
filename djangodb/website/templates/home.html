@@ -1,47 +1,92 @@
-<!-- home.html -->
-
 {% extends "base.html" %}
 
 {% block content %}
-    <style>
-        strong {
-            font-size: 1.2em;
-            color: #333;
-        }
+<style>
+    .content-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 500px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
 
-        p {
-            font-size: 1em;
-            color: #666;
-        }
-    </style>
+    .content-table thead tr {
+        background-color: #009879;
+        color: #ffffff;
+        text-align: left;
+    }
 
-    <br/>
-    <h1>Chemical Database</h1>
-    <br/>
+    .content-table th,
+    .content-table td {
+        padding: 12px 15px;
+    }
 
-    {% for chem in all %}
-        <div>
-            <strong>{{ chem.labitemname }}</strong>
-            <p>Type: {{ chem.labitemtype }}</p>
-            <p>Subtype: {{ chem.labitemsubtype }}</p>
-            <p>ID: {{ chem.labitemid }}</p>
+    .content-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
 
-            {% if chem.get_additional_fields %}
-                <h4>Additional Fields:</h4>
-                <ul>
-                    {% for key, value in chem.get_additional_fields.items %}
-                        <li><strong>{{ key }}:</strong> {{ value }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+    .content-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
 
-            {% if chem.documents %}
-                <img src="{{ chem.documents.url }}" style="width: 5vw; min-width: 33px;">
-            {% endif %}
+    .content-table tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
+    }
+</style>
 
-            <a href="{% url 'update_event' chem.id %}" class="btn btn-primary btn-sm">update</a>
-            <a href="{% url 'delete_event' chem.id %}" class="btn btn-danger btn-sm">delete</a>
-        </div>
-        <br/>
-    {% endfor %}
+<div class="btn-group justify-content-center" role="group" aria-label="Basic example">
+    <a href="{% url 'input' %}" class="btn btn-secondary m-2">Add more data</a>
+    <a href="{% url 'upload_file' %}" class="btn btn-secondary m-2">Input through file</a>
+    <a href="{% url 'index' %}" class="btn btn-secondary m-2">Search data</a>
+    <a href="{% url 'homepage' %}" class="btn btn-secondary m-2">Return to dashboard</a>
+</div>
+
+
+<h1>Chemical Database</h1>
+
+<table class="content-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Subtype</th>
+            <th>ID</th>
+            <th>Additional Fields</th>
+            <th>Image</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for chem in all %}
+            <tr>
+                <td><strong>{{ chem.labitemname }}</strong></td>
+                <td>{{ chem.labitemtype }}</td>
+                <td>{{ chem.labitemsubtype }}</td>
+                <td>{{ chem.labitemid }}</td>
+                <td>
+                    {% if chem.get_additional_fields %}
+                        <ul>
+                            {% for key, value in chem.get_additional_fields.items %}
+                                <li><strong>{{ key }}:</strong> {{ value }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if chem.documents %}
+                        <img src="{{ chem.documents.url }}" style="width: 5vw; min-width: 33px;">
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'update_event' chem.id %}" class="btn btn-primary btn-sm">Update</a>
+                </td>
+                <td>
+                    <a href="{% url 'delete_event' chem.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

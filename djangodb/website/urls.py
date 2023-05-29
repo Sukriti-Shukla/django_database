@@ -9,4 +9,5 @@ urlpatterns = [
     path('index', views.index, name='index'),
     path('update_event/<event_id>', views.update_event, name='update_event'),
     path('delete_event/<event_id>', views.delete_event, name='delete_event'),
+    path('upload', views.upload_file, name='upload_file'),
 ]

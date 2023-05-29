@@ -28,100 +28,83 @@
         <input class="form-control" type="file" id="formFile" name="documents" value="{{ form.documents.value }}">
     </div>
    
-    
-
-    <div id="additional-fields">
-               
-        <!-- <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Additional Field Name" name="additional_field_name_1">
-            <input type="text" class="form-control" placeholder="Additional Field Value" name="additional_field_value_1">
-        </div> -->
-        <div class="mb-3">
-            <select class="form-control additional-field-key" name="additional_field_name_1">
-                <option value="">Select Field Key</option>
-                <option value="field1">Field 1</option>
-                <option value="field2">Field 2</option>
-                <option value="field3">Field 3</option>
-                <option value="custom">Custom Field</option>
-                {% for chem in all %}
-                {% for field in chem.custom_fields %}
-                <option value="{{ field }}">{{ field }}</option>
-                {% endfor %}
-                {% endfor %}
-               
-            </select>
-            <input type="text" class="form-control custom-field-key" placeholder="Custom Field Name" name="custom_field_key_1" style="display: none;" >
-            <input type="text" class="form-control" placeholder="Additional Field Value" name="additional_field_value_1">
-        </div>
-        
-    </div>
+    <h3>Additional Fields</h3>
+    <table id="additional-fields" class="table">
+        <thead>
+            <tr>
+                <th>Field Name</th>
+                <th>Field Value</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Additional field rows go here -->
+        </tbody>
+    </table>
 
     <button type="button" class="btn btn-secondary" id="add-field-button">Add Field</button>
     <button type="submit" class="btn btn-secondary">Submit</button>
 </form>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    var additionalFieldsCount = 1;
+   var additionalFieldsCount = 0;
 
-    // function addAdditionalField() {
-    //     additionalFieldsCount++;
-    //     var additionalFieldHtml = `
-    //         <div class="mb-3">
-    //             <input type="text" class="form-control" placeholder="Additional Field Name" name="additional_field_name_${additionalFieldsCount}">
-    //             <input type="text" class="form-control" placeholder="Additional Field Value" name="additional_field_value_${additionalFieldsCount}">
-    //         </div>
-    //     `;
-    //     $("#additional-fields").append(additionalFieldHtml);
-    // }
-
-    // $(document).ready(function() {
-    //     $("#add-field-button").click(function() {
-    //         addAdditionalField();
-    //     });
-    // });
-    function addAdditionalField() {
+function addAdditionalField() {
     additionalFieldsCount++;
     var additionalFieldHtml = `
-        <div class="mb-3">
-            <select class="form-control additional-field-key" name="additional_field_name_${additionalFieldsCount}">
-                <option value="">Select Field Key</option>
-                <option value="field1">Field 1</option>
-                <option value="field2">Field 2</option>
-                <option value="field3">Field 3</option>
-                <option value="custom">Custom Field</option>
-                {% for chem in all %}
-                {% for field in chem.custom_fields %}
-                <option value="{{ field }}">{{ field }}</option>
-                {% endfor %}
-                {% endfor %}
-                
-            </select>
-            <input type="text" class="form-control custom-field-key" placeholder="Custom Field Name" name="custom_field_key_${additionalFieldsCount}" style="display: none;">
-            <input type="text" class="form-control" placeholder="Additional Field Value" name="additional_field_value_${additionalFieldsCount}">
+        <tr>
+            <td>
+                <select class="form-control additional-field-key" name="additional_field_name_${additionalFieldsCount}">
+                    <option value="">Select Field Key</option>
+                    <option value="field1">Field 1</option>
+                    <option value="field2">Field 2</option>
+                    <option value="field3">Field 3</option>
+                    <option value="custom">Custom Field</option>
+                    {% for chem in all %}
+                    {% for field in chem.custom_fields %}
+                    <option value="{{ field }}">{{ field }}</option>
+                    {% endfor %}
+                    {% endfor %}
+                </select>
+                <input type="text" class="form-control custom-field-key" placeholder="Custom Field Name" name="custom_field_key_${additionalFieldsCount}" style="display: none;">
+            </td>
+            <td>
+                <button type="button" class="btn btn-secondary" onclick="addTimestamp(this)">Add Timestamp</button>
+            </td>
+        </tr>
+    `;
+    $("#additional-fields tbody").append(additionalFieldHtml);
+}
+
+function addTimestamp(element) {
+    var parentTd = $(element).parent();
+    var timestampHtml = `
+        <div>
+            <input type="text" class="form-control" placeholder="Timestamp" name="additional_field_timestamp_${additionalFieldsCount}">
+            <input type="text" class="form-control" placeholder="Value" name="additional_field_value_${additionalFieldsCount}">
         </div>
     `;
-    $("#additional-fields").append(additionalFieldHtml);
+    parentTd.append(timestampHtml);
 }
-
 function handleAdditionalFieldKeyChange() {
-    var selectedValue = $(this).val();
-    var customFieldInput = $(this).siblings(".custom-field-key");
+        var selectedValue = $(this).val();
+        var customFieldInput = $(this).siblings(".custom-field-key");
 
-    if (selectedValue === "custom") {
-        customFieldInput.show();
-    } else {
-        customFieldInput.hide();
+        if (selectedValue === "custom") {
+            customFieldInput.show();
+        } else {
+            customFieldInput.hide();
+        }
     }
-}
 
 $(document).ready(function() {
     $("#add-field-button").click(function() {
         addAdditionalField();
     });
-
     $(document).on("change", ".additional-field-key", handleAdditionalFieldKeyChange);
 });
-
 </script>
 {% endblock %}

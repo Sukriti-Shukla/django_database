@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        strong {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        p {
+            font-size: 1em;
+            color: #666;
+        }
+        
+    </style>
+     
+    <a href="{% url 'homepage' %}" class="btn btn-primary btn-sm">homepage</a>
+    <br/>
+    <h1>Chemical Database</h1>
+    <br/>
+   
+
+
+    {% for chem in all %}
+        <div>
+            <strong>{{ chem.labitemname }}</strong>
+            <p>Type: {{ chem.labitemtype }}</p>
+            <p>Subtype: {{ chem.labitemsubtype }}</p>
+            <p>ID: {{ chem.labitemid }}</p>
+
+            {% if chem.get_additional_fields %}
+                <h4>Additional Fields:</h4>
+                <ul>
+                    {% for key, value in chem.get_additional_fields.items %}
+                        <li><strong>{{ key }}:</strong> {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if chem.documents %}
+                <img src="{{ chem.documents.url }}" style="width: 5vw; min-width: 33px;">
+            {% endif %}
+
+            <a href="{% url 'update_event' chem.id %}" class="btn btn-primary btn-sm">update</a>
+            <a href="{% url 'delete_event' chem.id %}" class="btn btn-danger btn-sm">delete</a>
+        </div>
+        <br/>
+    {% endfor %}
+{% endblock %}

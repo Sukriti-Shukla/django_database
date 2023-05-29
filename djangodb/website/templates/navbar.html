@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #D3D3D3;">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'homepage' %}">
+            <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="20" alt="MDB Logo"
+              loading="lazy" />
+          </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ml-auto">
+                
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-dark btn-sm float-right" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'register_user' %}" class="btn btn-outline-dark btn-sm float-right">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

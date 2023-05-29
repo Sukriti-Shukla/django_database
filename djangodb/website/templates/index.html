@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +13,11 @@
 </head>
 <body>
     <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Search Chemicals</h1>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+        </div>
+
         <form>
             <div class="input-group">
                 <input type="text" class="form-control" name="q">
@@ -40,3 +48,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+{% endblock %}

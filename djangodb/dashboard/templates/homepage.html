@@ -1,0 +1,284 @@
+{% extends "base.html" %}  <!-- assuming you have a base template named main.html -->
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Your Page Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" >
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+        body{
+    background: #eee;
+        }
+        span{
+            font-size:15px;
+        }
+        a{
+        text-decoration:none; 
+        color: #0062cc;
+        border-bottom:2px solid #0062cc;
+        }
+
+        
+        .box{
+            padding:10px 0px;
+        }
+        .box-part:hover {
+                transform: scale(1.05);
+            }
+
+
+        .box-part{
+            background:#FFF;
+            border-radius:10px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            padding:60px 30px 40px;
+            margin:30px 0px;
+            text-align: center;
+            transition: 0.3s;
+            width: 100%;
+        }
+        .text{
+            margin:20px 0px;
+        }
+
+        .fa{
+            color:#4183D7;
+        }
+        .fas{
+            color:#4183D7;
+        }
+        .header {
+        padding: 50px 0px 0px;
+        text-align: center;
+        margin-bottom: 20px;
+        }
+
+        .logo-container {
+        display: flex;
+        justify-content: space-between;
+        max-width: 800px;
+        margin: 0 auto;
+        }
+
+        .logo-container img {
+        padding: 10px;
+        flex-grow: 1;
+        width: 100%;
+        }
+
+        .logo-double-width {
+        flex-grow: 2;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Dashboard</h1>
+        
+      </div>
+      
+      
+      
+    <div class="box">
+        <div class="container">
+             <div class="row">
+                 
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fa fa-flask fa-3x" aria-hidden="true"></i>
+                            
+                            <div class="title">
+                                <h4>Lab Items</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="{% url 'home' %}" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>	 
+                    
+                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fas fa-microscope fa-3x" aria-hidden="true"></i>
+                        
+                            <div class="title">
+                                <h4>Instruments</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="#" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>	 
+                    
+                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fa fa-cubes fa-3x" aria-hidden="true"></i>
+                            
+                            <div class="title">
+                                <h4>Materials</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="#" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>	 
+                    
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fas fa-atom fa-3x" aria-hidden="true"></i>
+                            
+                            <div class="title">
+                                <h4>Synthesis</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="#" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>	 
+                    
+                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fas fa-burn fa-3x" aria-hidden="true"></i>
+                        
+                            <div class="title">
+                                <h4>Reaction</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="#" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>	 
+                    
+                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fa fa-chart-bar fa-3x" aria-hidden="true"></i>
+                            
+                            <div class="title">
+                                <h4>Charecterization</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="#" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fas fa-laptop-code fa-3x" aria-hidden="true"></i>
+                            
+                            <div class="title">
+                                <h4>Simulations</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="#" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>	 
+                    
+                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fa fa-tasks fa-3x" aria-hidden="true"></i>
+                        
+                            <div class="title">
+                                <h4>Operando Charecterization</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="#" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>	 
+                    
+                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                   
+                        <div class="box-part text-center">
+                            
+                            <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+                            
+                            <div class="title">
+                                <h4>Members</h4>
+                            </div>
+                            
+                            <div class="text">
+                                <span>Lorem ipsum dolor sit amet, id quo eruditi eloquentiam. Assum decore te sed. Elitr scripta ocurreret qui ad.</span>
+                            </div>
+                            
+                            <a href="#" style="background-color: #4183D7; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Visit</a>
+                            
+                         </div>
+                    </div>
+            </div>		
+        </div>
+    </div>
+
+</body>
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+<script src="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% endblock %}
+
+
+
+
+
+   

@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Chemical
-from .forms import ChemicalForm
+from .forms import ChemicalForm, UploadFileForm
 from django.contrib import messages
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline
-
+import pandas as pd
 import json
 
 
@@ -40,25 +40,41 @@ def input(request):
             for key, value in request.POST.items():
                 if key.startswith('custom_field_key_'):
                     field_index = key.split('_')[-1]
-                    field_name =request.POST.get(f'custom_field_key_{field_index}')
-                    if field_name!="":
-                        custom_names.append(field_name)
+                    field_name = request.POST.get(f'custom_field_key_{field_index}')
                     
-                    field_value = request.POST.get(f'additional_field_value_{key.split("_")[-1]}')
-                    if field_name!="":
-                        additional_fields[field_name] = field_value
+                    if field_name != "":
+                        custom_names.append(field_name)
+                        if field_name not in additional_fields:
+                            additional_fields[field_name] = {}
+                        
+                        timestamps = request.POST.getlist(f'additional_field_timestamp_{field_index}')
+                        values = request.POST.getlist(f'additional_field_value_{field_index}')
+                        
+                        for i in range(len(timestamps)):
+                            if timestamps[i] != "" and values[i] != "":
+                                additional_fields[field_name][timestamps[i]] = values[i]
+                                
                 elif key.startswith('additional_field_name_'):
                     field_index = key.split('_')[-1]
                     field_name = value
-                    field_value = request.POST.get(f'additional_field_value_{key.split("_")[-1]}')
-                    if field_name!="custom":
-                        additional_fields[field_name] = field_value
+                    
+                    if field_name != "" and field_name != "custom":
+                        if field_name not in additional_fields:
+                            additional_fields[field_name] = {}
+                        
+                        timestamps = request.POST.getlist(f'additional_field_timestamp_{field_index}')
+                        values = request.POST.getlist(f'additional_field_value_{field_index}')
+                        
+                        for i in range(len(timestamps)):
+                            if timestamps[i] != "" and values[i] != "":
+                                additional_fields[field_name][timestamps[i]] = values[i]
             
             chemical = form.save(commit=False)
             chemical.custom_fields = custom_names
             chemical.additional_fields = additional_fields
             chemical.json_data = json.dumps(additional_fields)
             chemical.save()
+
             messages.success(request, 'Item has been added to the database!')
             return redirect('home')
         else:
@@ -66,6 +82,9 @@ def input(request):
     else:
         form = ChemicalForm()
     return render(request, 'input.html', {'form': form,'all': all_chemicals})
+
+
+
 
 def input_template(request):
     selected_type = None
@@ -158,6 +177,36 @@ def delete_event(request, event_id):
     messages.success(request, 'Event has been deleted!')
     return redirect('home')
 
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = pd.read_csv(request.FILES['file'])
+            for index, row in data.iterrows():
+                labitemtype = row.get('labitemtype', '')
+                labitemsubtype = row.get('labitemsubtype', '')
+                labitemid = row.get('labitemid', '')
+                labitemname = row.get('labitemname', '')
+                
+                # Get additional fields
+                additional_fields = row.to_dict()
+                for field in ['labitemtype', 'labitemsubtype', 'labitemid', 'labitemname']:
+                    if field in additional_fields:
+                        del additional_fields[field]
+
+                # Create new Chemical object
+                Chemical.objects.create(
+                    labitemtype=labitemtype,
+                    labitemsubtype=labitemsubtype,
+                    labitemid=labitemid,
+                    labitemname=labitemname,
+                    json_data=json.dumps(additional_fields)  # Store additional fields as JSON
+                )
+
+            return redirect('home')  # Redirect to a new page when done
+    else:
+        form = UploadFileForm()
+    return render(request, 'upload.html', {'form': form})
 def index(request):
     q = request.GET.get('q')
 
