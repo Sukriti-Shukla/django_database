@@ -54,8 +54,10 @@
             <th>ID</th>
             <th>Additional Fields</th>
             <th>Image</th>
+            <th>Last Modified by</th>
             <th>Update</th>
             <th>Delete</th>
+
         </tr>
     </thead>
     <tbody>
@@ -79,6 +81,7 @@
                         <img src="{{ chem.documents.url }}" style="width: 5vw; min-width: 33px;">
                     {% endif %}
                 </td>
+                <td>{{ chem.last_modified_by }}</td>
                 <td>
                     <a href="{% url 'update_event' chem.id %}" class="btn btn-primary btn-sm">Update</a>
                 </td>

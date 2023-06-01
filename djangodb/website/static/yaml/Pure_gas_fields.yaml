@@ -1,0 +1,31 @@
+SuggestedFields:
+  - name: "Other names"
+    type: string
+    value:
+  - name: "Purity"
+    type: string
+    value:
+  - name: "CAS number"
+    type: string
+    value:
+  - name: "Chemical formula"
+    type: string
+    value:
+  - name: "Batch number"
+    type: string
+    value:
+  - name: "MSDS"
+    type: file
+    value:
+  - name: "URL"
+    type: url
+    value:
+  - name: "Location"
+    type: string
+    value:
+  - name: "Purchased on"
+    type: datetime
+    value:
+  - name: "Purchased by"
+    type: string
+    value:

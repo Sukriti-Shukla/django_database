@@ -12,11 +12,18 @@
 <form method="POST" action="{% url 'input' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="mb-3">
-        <input type="text" class="form-control" id="exampleInput1" aria-describedby="emailHelp" placeholder="lab item type" name="labitemtype" value="{{ form.labitemtype.value }}">
+        <select class="form-control" id="labitemtype" name="labitemtype" data-selected="{{ form.labitemtype.value }}">
+            <option value="">Select lab item type</option>
+            <option value="Inorganic chemicals">Inorganic chemicals</option>
+            <option value="Gases">Gases</option>
+        </select>
     </div>
     <div class="mb-3">
-        <input type="text" class="form-control" id="exampleInput2" placeholder="lab item subtype" name="labitemsubtype" value="{{ form.labitemsubtype.value }}">
+        <select class="form-control" id="labitemsubtype" name="labitemsubtype" data-selected="{{ form.labitemsubtype.value }}">
+            <!-- Options will be populated by JavaScript -->
+        </select>
     </div>
+    <div id="suggested-fields"></div>
     <div class="mb-3">
         <input type="text" class="form-control" id="exampleInput3" placeholder="lab item id" name="labitemid" value="{{ form.labitemid.value }}">
     </div>
@@ -27,7 +34,17 @@
         <label for="formFile" class="form-label">Related docs</label>
         <input class="form-control" type="file" id="formFile" name="documents" value="{{ form.documents.value }}">
     </div>
-   
+    {% if suggested_fields %}
+        <div id="suggested-fields">
+            <h3>Suggested Fields</h3>
+            {% for field in suggested_fields %}
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="{{ field }}" name="{{ field }}">
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
     <h3>Additional Fields</h3>
     <table id="additional-fields" class="table">
         <thead>
@@ -44,13 +61,14 @@
 
     <button type="button" class="btn btn-secondary" id="add-field-button">Add Field</button>
     <button type="submit" class="btn btn-secondary">Submit</button>
+    
 </form>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script>
-   var additionalFieldsCount = 0;
+var additionalFieldsCount = 0;
 
 function addAdditionalField() {
     additionalFieldsCount++;
@@ -89,22 +107,116 @@ function addTimestamp(element) {
     `;
     parentTd.append(timestampHtml);
 }
-function handleAdditionalFieldKeyChange() {
-        var selectedValue = $(this).val();
-        var customFieldInput = $(this).siblings(".custom-field-key");
 
-        if (selectedValue === "custom") {
-            customFieldInput.show();
-        } else {
-            customFieldInput.hide();
-        }
+function handleAdditionalFieldKeyChange() {
+    var selectedValue = $(this).val();
+    var customFieldInput = $(this).siblings(".custom-field-key");
+
+    if (selectedValue === "custom") {
+        customFieldInput.show();
+    } else {
+        customFieldInput.hide();
     }
+}
+function fetchSuggestedFields(subtype) {
+    $.get("/fetch_subtype_fields/" + subtype.replace(" ", "_") + "/").done(function(data) {
+        var suggestedFieldsDiv = $("#suggested-fields");
+        suggestedFieldsDiv.empty();
+
+        $.each(data, function(index, field) {
+            var inputHtml = `
+                <div class="mb-3">
+                    <label for="${field}" class="form-label">${field}</label>
+                    <input type="text" class="form-control" id="${field}" name="${field}" placeholder="${field}">
+                </div>
+            `;
+            suggestedFieldsDiv.append(inputHtml);
+        });
+    }).fail(function() {
+        console.log("Failed to fetch suggested fields for subtype: " + subtype);
+    });
+}
+
+// This will populate the subtype select field based on the selected type
+function populateSubtypes() {
+    var type = $('#labitemtype').val();
+    var subtype = $('#labitemsubtype');
+    subtype.empty();
+    if (type === 'Inorganic chemicals') {
+        subtype.append('<option value="Metal salts">Metal salts</option>');
+        subtype.append('<option value="Metal oxides">Metal oxides</option>');
+    } else if (type === 'Gases') {
+        subtype.append('<option value="Pure gas">Pure gas</option>');
+        subtype.append('<option value="Gas mixture">Gas mixture</option>');
+    }
+    // Set the previously selected value, if any
+    subtype.val(subtype.attr('data-selected'));
+    fetchSuggestedFields(subtype.val());
+}
+// When the subtype select field changes, fetch the suggested fields
+
+
 
 $(document).ready(function() {
     $("#add-field-button").click(function() {
         addAdditionalField();
     });
     $(document).on("change", ".additional-field-key", handleAdditionalFieldKeyChange);
+    // When the type select field changes, populate the subtypes
+    $('#labitemtype').change(populateSubtypes);
+    // Trigger a change event to populate the subtype select field on page load
+    $('#labitemtype').change();
 });
+
+$(document).ready(function() {
+    $('#labitemsubtype').change(function() {
+        var subtype = $(this).val();
+        if (subtype) {
+            $.get('{% url "fetch_subtype_fields" %}', { subtype: subtype }, function(data) {
+                // Assuming 'data' is a list of field names
+                $('#suggested-fields').empty();
+                for (var i = 0; i < data.length; i++) {
+                    $('#suggested-fields').append('<input type="text" name="' + data[i] + '" placeholder="' + data[i] + '">');
+                }
+                $('.additional-fields-section').show();
+            });
+        } else {
+            $('#suggested-fields').empty();
+            $('.additional-fields-section').hide();
+        }
+    });
+});
+
+$("#labitemsubtype").change(function () {
+    let subtype = $(this).val();
+    $.get('/fetch_subtype_fields/', {subtype: subtype}, function(fields) {
+        console.log("Fetched fields: ", fields);
+        $('#suggested-fields').empty();  // clear any previous fields
+        $.each(fields, function(name, type) {
+            // create the input field based on the 'type'
+            let input;
+            switch (type) {
+                case 'string':
+                    input = `<input type="text" name="${name}" />`;
+                    break;
+                case 'file':
+                    input = `<input type="file" name="${name}" />`;
+                    break;
+                case 'url':
+                    input = `<input type="url" name="${name}" />`;
+                    break;
+                case 'datetime':
+                    input = `<input type="datetime-local" name="${name}" />`;
+                    break;
+                default:
+                    input = `<input type="text" name="${name}" />`;
+            }
+            $('#suggested-fields').append(`<label>${name}</label> ${input}<br/>`);
+        });
+    });
+});
+
+
+
 </script>
 {% endblock %}
