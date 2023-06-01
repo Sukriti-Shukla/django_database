@@ -41,11 +41,11 @@ def home(request):
 #     # Construct the file name based on the labitemsubtype
 #     yaml_file = f'{labitemsubtype.replace(" ", "_")}_fields.yaml'
     
-#     # Construct the absolute path to the yaml file
+#     
 #     yaml_file_path = os.path.join(settings.STATIC_ROOT, 'yaml', yaml_file)
     
 #     with open(yaml_file_path, 'r') as file:
-#         # The yaml.safe_load function can parse a YAML file and return the resulting Python data.
+#        
 #         suggested_fields = yaml.safe_load(file)
         
 #     return suggested_fields
@@ -53,10 +53,10 @@ def home(request):
 #     fields = get_suggested_fields(subtype.replace("-", " "))
 #     return JsonResponse(fields, safe=False)
 def get_suggested_fields(labitemsubtype):
-    # Construct the file name based on the labitemsubtype
+    
     yaml_file = f'{labitemsubtype.replace(" ", "_")}_fields.yaml'
     
-    # Construct the absolute path to the yaml file
+    
     #yaml_file_path = static(f'website/yaml/{yaml_file}')
     yaml_file_path = os.path.join(settings.STATIC_ROOT, 'yaml', yaml_file)
     # Check if the file exists
@@ -65,7 +65,7 @@ def get_suggested_fields(labitemsubtype):
         
     with open(yaml_file_path, 'r') as file:
         try:
-            # The yaml.safe_load function can parse a YAML file and return the resulting Python data.
+            
             suggested_fields = yaml.safe_load(file)
         except yaml.YAMLError as error:
             raise yaml.YAMLError(f"Error parsing YAML file: {error}")
@@ -74,7 +74,7 @@ def get_suggested_fields(labitemsubtype):
 
 def fetch_subtype_fields(request):
     subtype = request.GET.get('subtype', '')
-    subtype = subtype.replace(' ', '_')  # replace spaces with underscore
+    subtype = subtype.replace(' ', '_')  
     #fields = subtypes.get(subtype, {})
     fields = field_type.get(subtype, {})
     return JsonResponse(fields)
@@ -173,7 +173,7 @@ def update_event(request, event_id):
         
     if form.is_valid():
         chemical = form.save(commit=False)
-        chemical.user = request.user  # Assign the current user to the 'user' field of the chemical
+        chemical.user = request.user  
         chemical.save()
         messages.success(request, 'Event has been updated!')
         return redirect('home')
@@ -225,9 +225,7 @@ def index(request):
         query = SearchQuery(q)
         search_headline = SearchHeadline('labitemname', query)
 
-        #videos = Video.objects.filter(title__search=q)
-        #videos = Video.objects.annotate(search=vector).filter(search=query)
-        #videos = Video.objects.annotate(rank=SearchRank(vector, query)).filter(rank__gte=0.001).order_by('-rank')
+        
         chemicals = Chemical.objects.annotate(rank=SearchRank(vector, query)).annotate(headline=search_headline).filter(rank__gte=0.001).order_by('-rank')
     else:
         chemicals = None

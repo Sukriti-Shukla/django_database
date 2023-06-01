@@ -164,7 +164,6 @@ $(document).ready(function() {
     $(document).on("change", ".additional-field-key", handleAdditionalFieldKeyChange);
     // When the type select field changes, populate the subtypes
     $('#labitemtype').change(populateSubtypes);
-    // Trigger a change event to populate the subtype select field on page load
     $('#labitemtype').change();
 });
 
@@ -173,7 +172,7 @@ $(document).ready(function() {
         var subtype = $(this).val();
         if (subtype) {
             $.get('{% url "fetch_subtype_fields" %}', { subtype: subtype }, function(data) {
-                // Assuming 'data' is a list of field names
+                
                 $('#suggested-fields').empty();
                 for (var i = 0; i < data.length; i++) {
                     $('#suggested-fields').append('<input type="text" name="' + data[i] + '" placeholder="' + data[i] + '">');
@@ -193,7 +192,7 @@ $("#labitemsubtype").change(function () {
         console.log("Fetched fields: ", fields);
         $('#suggested-fields').empty();  // clear any previous fields
         $.each(fields, function(name, type) {
-            // create the input field based on the 'type'
+            // creatiG the input field based on the 'type'
             let input;
             switch (type) {
                 case 'string':
