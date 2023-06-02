@@ -13,6 +13,56 @@ import os
 from .field_type import field_type
 from django.templatetags.static import static
 # Create your views here.
+subtypes = {
+    'Metal_oxides': {
+        'Other names': 'string',
+        'Purity': 'string',
+        'CAS number': 'string',
+        'Chemical formula': 'string',
+        'Batch number': 'string',
+        'MSDS': 'file',
+        'URL': 'url',
+        'Location': 'string',
+        'Purchased on': 'datetime',
+        'Purchased by': 'string',
+    },
+    'Metal_salts': {
+        'Other names': 'string',
+        'Purity': 'string',
+        'CAS number': 'string',
+        'Chemical formula': 'string',
+        'Batch number': 'string',
+        'MSDS': 'file',
+        'URL': 'url',
+        'Location': 'string',
+        'Purchased on': 'datetime',
+        'Purchased by': 'string',
+    },
+    'Pure_gas': {
+        'Other names': 'string',
+        'Purity': 'string',
+        'CAS number': 'string',
+        'Chemical formula': 'string',
+        'Batch number': 'string',
+        'MSDS': 'file',
+        'URL': 'url',
+        'Location': 'string',
+        'Purchased on': 'datetime',
+        'Purchased by': 'string',
+    },
+    'Gas_mixture': {
+        'Other names': 'string',
+        'Purity': 'string',
+        'CAS number': 'string',
+        'Chemical formula': 'string',
+        'Batch number': 'string',
+        'MSDS': 'file',
+        'URL': 'url',
+        'Location': 'string',
+        'Purchased on': 'datetime',
+        'Purchased by': 'string',
+    },
+}
    
 
 def home(request):
@@ -88,7 +138,7 @@ def input(request):
             additional_fields = {}
             custom_names = []
             for key, value in request.POST.items():
-                if key in field_type[request.POST.get('labitemsubtype').replace(" ", "_")]:
+                if key in subtypes[request.POST.get('labitemsubtype').replace(" ", "_")]:
                     additional_fields[key] = value
                 if key.startswith('custom_field_key_'):
                     field_index = key.split('_')[-1]
@@ -154,9 +204,7 @@ def input_template(request):
             for field in additional_fields:
                 field_key = field['key']
                 field_value = request.POST.get(field_key)
-                # Perform further processing or validation on the field value
-                
-                # Example: Print the key-value pair
+               
                 print(field_key, field_value)
     
     types = all_chemicals.order_by().values_list('labitemtype', flat=True).distinct()

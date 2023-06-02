@@ -33,11 +33,32 @@
             {% for chemical in chemicals %}
                 <div class="card mt-3">
                     <div class="card-body">
-                        <h5 class="card-title">{{ chemical.labitemname }}</h5>
-                        <p class="card-text">{{ chemical.headline|safe }}</p>
-                        <p class="card-text">{{ chemical.labitemtype|safe }}</p>
+                        <h5 class="card-title">Item Name: {{ chemical.labitemname }}</h5>
+                        <p class="card-text">Item ID: {{ chemical.labitemid|safe }}</p>
+                        <p class="card-text">Item Type: {{ chemical.labitemtype|safe }}</p>
+                        {% if chemical.documents %}
+                        <img src="{{ chemical.documents.url }}" style="width: 5vw; min-width: 33px;">
+                        <p><a href="{{ chemical.documents.url }}" download class="btn btn-secondary">Download Document</a></p>
+                        {% endif %}     
                     </div>
-                </div>
+                
+                <td>
+                    {% if chemical.get_additional_fields %}
+                    <div class="card-body">
+                        <h4 class = "card-title">   Additional Fields:</h4>
+                        <ul>
+                            {% for key, value in chemical.get_additional_fields.items %}
+                                
+                            {% if value %} <!-- Check if the value is not empty -->
+                            <li><strong>{{ key }}:</strong> {{ value }}</li>
+                        {% endif %}
+        
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </td>
+            </div>
             {% endfor %}
         </div>
         {% endif %}
