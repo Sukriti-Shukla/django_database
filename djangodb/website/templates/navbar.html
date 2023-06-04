@@ -1,15 +1,27 @@
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #D3D3D3;">
     <div class="container">
         <a class="navbar-brand" href="{% url 'homepage' %}">
-            <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="20" alt="MDB Logo"
+            {% load static%}<img src="{% static 'RDM4Cat_logo.png' %}" height="20" width="90" alt="RDM4Cat"
               loading="lazy" />
-          </a>
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ml-auto">
-                
+                <!-- About -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <!-- Dashboard -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'homepage' %}">Dashboard</a>
+                </li>
+                <!-- Contact -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Logout</a>

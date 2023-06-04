@@ -1,0 +1,11 @@
+Django==4.2.1
+numpy==1.24.3
+p==1.4.0
+pandas==2.0.1
+Pillow==9.5.0
+psycopg2==2.9.6
+PyYAML==6.0
+simplejson==3.19.1
+sqlparse==0.4.4
+unique-id==1.0.6
+

@@ -4,58 +4,32 @@
         color: #333; /* adjust as needed */
     }
     body {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-}
-
-main {
-    flex: 1;
-}
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+    }
+    
+    main {
+        flex: 1;
+    }
+    .logo-spacing {
+    margin: 0 25px; /* adjust as needed */
+    }
     </style>
     
     <footer class="footer mt-auto py-3" style="background-color: #D3D3D3;">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">About</h5>
+            <div class="row justify-content-end"> <!-- Align right -->
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0 text-center"> <!-- Text center -->
+                    <h5 class="text-uppercase"><strong> In Association With </strong></h5>
     
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus deleniti ipsam omnis!</p>
+                    {% load static %}
+                    <div class="d-flex justify-content-center"> <!-- Align images center -->
+                        <img src="{% static 'NFDI_logo.png' %}" height="50" width="100" alt="Logo 1" loading="lazy" class="logo-spacing">
+                        <img src="{% static 'NFDI4Cat_logo.png' %}" height="50" width="130" alt="Logo 2" loading="lazy" class="logo-spacing">
+                        <img src="{% static 'TUM_logo.png' %}" height="50" width="100" alt="Logo 3" loading="lazy" class="logo-spacing">
+                    </div>
                 </div>
-    
-                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Contact Info</h5>
-    
-                    <ul class="list-unstyled mb-0">
-                        <li>
-                            <p>1234 Main St.</p>
-                        </li>
-                        <li>
-                            <p>Your City, Your State 12345</p>
-                        </li>
-                        <li>
-                            <p>(123) 456-7890</p>
-                        </li>
-                        <li>
-                            <p>info@example.com</p>
-                        </li>
-                    </ul>
-                </div>
-    
-                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Email</h5>
-    
-                    <form>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Recipient's email" aria-label="Recipient's email" aria-describedby="button-addon2">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-    
-            <div class="text-center text-white mt-3">
-                <p>© 2023 Your Company Name. All rights reserved.</p>
             </div>
         </div>
     </footer>
