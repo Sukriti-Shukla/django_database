@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="content">
+    <h2>New Synthesis</h2>
+    <form method="POST" action="{% url 'synthesis_input' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_name">Name</label>
+            <input type="text" class="form-control" id="id_name" name="name">
+        </div>
+        <div class="form-group">
+            <label for="id_synthesized_by">Synthesized By</label>
+            <input type="text" class="form-control" id="id_synthesized_by" name="synthesized_by">
+        </div>
+        <div class="form-group">
+            <label for="id_synthesized_on">Synthesized On</label>
+            <input type="date" class="form-control" id="id_synthesized_on" name="synthesized_on">
+        </div>
+        <div class="form-group">
+            <label for="id_added_by">Added By</label>
+            <input type="text" class="form-control" id="id_added_by" name="added_by">
+        </div>
+        <div class="form-group">
+            <label for="id_added_on">Added On</label>
+            <input type="date" class="form-control" id="id_added_on" name="added_on">
+        </div>
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Related docs</label>
+            <input class="form-control" type="file" id="formFile" name="files" value="{{ form.files.value }}">
+        </div>
+        <div class="mb-3">
+            <label for="proceduretype">Procedure Type</label>
+            <select class="form-control" id="proceduretype" name="proceduretype" data-selected="{{ form.proceduretype.value }}">
+                <option value="">Select Procedure type</option>
+                <option value="procedure1">Procedure 1</option>
+                <option value="procedure2">Procedure 2</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="proceduresubtype">Procedure Subtype</label>
+            <select class="form-control" id="proceduresubtype" name="proceduresubtype" data-selected="{{ form.proceduresubtype.value }}">
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+        <h3>Synthesis Parameters/ Conditions</h3>
+    <table id="additional-fields" class="table">
+        <thead>
+            <tr>
+                <th> Name</th>
+                <th> Value</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Additional field rows go here -->
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-secondary" id="add-field-button">Add Field</button>
+        <div class="form-group">
+            <label for="id_description">Description</label>
+            <textarea class="form-control" id="id_description" name="description" rows="3"></textarea>
+        </div>
+        <input type="hidden" id="id_precursor_chemicals" name="precursor_chemicals">
+        <button type="submit" class="btn btn-secondary">Save</button>
+    </form>
+    <div id="precursorChemicals">
+        <h3>Precursor Chemicals</h3>
+    </div>
+    <button type="button" class="btn btn-secondary mt-2" onclick="openChemicalDialog()">Add Chemical</button>
+    <div class="modal fade" id="chemicalModal" tabindex="-1" aria-labelledby="chemicalModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chemicalModalLabel">Add Chemical</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="chemicalSearch" class="form-control" name="q" placeholder="Search Chemical...">
+                    <button type="button" class="btn btn-primary" onclick="searchChemicals()">Search</button>
+                    <select id="searchResults" class="form-control mt-2"></select>
+                    <input type="number" id="chemicalAmount" class="form-control mt-2" placeholder="Amount...">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addChemical()">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+console.log("Script running");
+var additionalFieldsCount = 0;
+
+function addAdditionalField() {
+    additionalFieldsCount++;
+    var additionalFieldHtml = `
+        <tr>
+            <td>
+                <select class="form-control additional-field-key" name="additional_field_name_${additionalFieldsCount}">
+                    <option value="">Select Field Key</option>
+                    <option value="field1">Temprature</option>
+                    <option value="field2">Pressure</option>
+                    <option value="field3">Volume</option>
+                    <option value="custom">Custom condition</option>
+                    {% for chem in all %}
+                    {% for field in chem.custom_fields %}
+                    <option value="{{ field }}">{{ field }}</option>
+                    {% endfor %}
+                    {% endfor %}
+                </select>
+                <input type="text" class="form-control custom-field-key" placeholder="Custom Field Name" name="custom_field_key_${additionalFieldsCount}" style="display: none;">
+            </td>
+            <td>
+                <button type="button" class="btn btn-secondary" onclick="addTimestamp(this)">Add Timestamp</button>
+            </td>
+        </tr>
+    `;
+    $("#additional-fields tbody").append(additionalFieldHtml);
+}
+
+function addTimestamp(element) {
+    var parentTd = $(element).parent();
+    var timestampHtml = `
+        <div>
+            <input type="text" class="form-control" placeholder="Timestamp" name="additional_field_timestamp_${additionalFieldsCount}">
+            <input type="text" class="form-control" placeholder="Value" name="additional_field_value_${additionalFieldsCount}">
+        </div>
+    `;
+    parentTd.append(timestampHtml);
+}
+
+function handleAdditionalFieldKeyChange() {
+    var selectedValue = $(this).val();
+    var customFieldInput = $(this).siblings(".custom-field-key");
+
+    if (selectedValue === "custom") {
+        customFieldInput.show();
+    } else {
+        customFieldInput.hide();
+    }
+}
+
+function populateSubtypes() {
+    var type = $('#proceduretype').val();
+    var subtype = $('#proceduresubtype');
+    subtype.empty();
+    if (type === 'procedure1') {
+        subtype.append('<option value="subprocedure11">Subprocedure 1.1</option>');
+        subtype.append('<option value="subprocedure12">Subprocedure 1.2</option>');
+    } else if (type === 'procedure2') {
+        subtype.append('<option value="subprocedure21">Subprocedure 2.1</option>');
+        subtype.append('<option value="subprocedure22">Subprocedure 2.2</option>');
+    }
+    subtype.val(subtype.attr('data-selected'));
+}
+
+$(document).ready(function() {
+    $('#proceduretype').change(populateSubtypes);
+    $('#proceduretype').change();
+    $("#add-field-button").click(function() {
+        addAdditionalField();
+    });
+    $(document).on("change", ".additional-field-key", handleAdditionalFieldKeyChange);
+});
+
+    var searchUrl = "{% url 'search_precursors' %}";
+
+    function searchChemicals() {
+        var query = document.getElementById('chemicalSearch').value;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', searchUrl + '?q=' + query, true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                var searchResults = document.getElementById('searchResults');
+                searchResults.innerHTML = '';  // Clear previous results
+
+                if (response.length > 0) {
+                    response.forEach(function (result) {
+                        var option = document.createElement('option');
+                        option.value = result.labitemname || result.name;
+                        option.textContent = result.labitemname || result.name;
+                        searchResults.appendChild(option);
+                    });
+                } else {
+                    var option = document.createElement('option');
+                    option.textContent = 'No results found';
+                    searchResults.appendChild(option);
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    function addChemical() {
+        var selectedChemical = document.getElementById('searchResults').value;
+        var amount = document.getElementById('chemicalAmount').value;
+        
+
+        if (selectedChemical && amount) {
+            var precursorEntry = document.createElement('div');
+            precursorEntry.textContent = selectedChemical + ' - ' + amount;
+
+            var precursorChemicals = document.getElementById('precursorChemicals');
+            precursorChemicals.appendChild(precursorEntry);
+
+            var precursorChemicalsInput = document.getElementById('id_precursor_chemicals');
+            var precursorChemicalsData = JSON.parse(precursorChemicalsInput.value || '{}');
+            precursorChemicalsData[selectedChemical] = { 'amount': amount};
+            precursorChemicalsInput.value = JSON.stringify(precursorChemicalsData);
+
+
+            document.getElementById('chemicalSearch').value = '';
+            document.getElementById('chemicalAmount').value = '';
+
+            $('#chemicalModal').modal('hide');
+        }
+    }
+
+    function openChemicalDialog() {
+        document.getElementById('chemicalSearch').value = '';
+        document.getElementById('chemicalAmount').value = '';
+
+        var searchResults = document.getElementById('searchResults');
+        searchResults.innerHTML = '';  // Clear previous results
+
+        $('#chemicalModal').modal('show');
+    }
+</script>
+
+
+
+{% endblock %}

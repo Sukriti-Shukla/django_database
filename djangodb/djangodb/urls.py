@@ -22,8 +22,12 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', include('dashboard.urls')),
+    path('', include('synthesis.urls')),
     path('members/', include('members.urls')),
     path('members/', include('django.contrib.auth.urls')),
-    path('', include('website.urls')),
+    path('', include('labitems.urls')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+#     path('', include('website.urls')),
+# ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
     
