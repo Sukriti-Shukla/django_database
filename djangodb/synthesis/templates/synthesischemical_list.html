@@ -60,17 +60,45 @@
                         <ul>
                             {% for  precursor_id, precursor_info in synthesischemical.precursor_chemicals.items %}
                             
-                            <li>ID: {{ precursor_id }}, Amount: {{ precursor_info.amount }} </li>
+                            <a class="precursor-link" href="{% url 'precursor_list_search' %}?q={{ precursor_id }}">
+                                ID: {{ precursor_id }},
+                            </a>
+                            
+                                Amount: {{ precursor_info.amount }}
+                            </li>
+                            
                             
                             {% endfor %}
                         </ul>
                     </div>
                 {% endfor %}
             </div>
+
+            
         </div>
         <a href="{% url 'synthesis_input' %}" class="btn btn-secondary m-2">Add more data</a>
     </div>
 </div>
+</div>
+
+
+<!-- The new dialog box -->
+<div id="precursorDialog" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Precursor Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <div class="modal-body">
+                <!-- The content will be added here by the JS -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
         <style>
@@ -127,8 +155,7 @@
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-beta1/js/bootstrap.bundle.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const sidebar = document.getElementById('sidebar');
@@ -155,5 +182,17 @@
             sidebar.classList.toggle('active');
         });
             });
+        </script>
+
+        <!-- The new script -->
+        <script>
+            $('a.precursor-link').click(function(e) {
+            e.preventDefault();
+            $.get(this.href, function(data) {
+                $('#precursorDialog .modal-body').html(data);
+                $('#precursorDialog').modal('show');
+            });
+        });
+
         </script>
     {% endblock %}

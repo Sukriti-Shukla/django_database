@@ -62,7 +62,6 @@ def synthesis_input(request):
         
        
         post_data = request.POST.copy()
-        # Replace the 'precursor_chemicals' value with the parsed JSON data
         post_data['precursor_chemicals'] = precursor_chemicals
 
         form = SynthesisForm(post_data, request.FILES)
@@ -134,3 +133,12 @@ def synthesischemical_search(request):
     return render(request, 'synthesischemical_list.html', {
         'synthesischemicals': synthesischemicals,
     })
+
+def precursor_list_search(request):
+    query = request.GET.get('q', '')
+    chemicals = Chemical.objects.filter(Q(labitemname__iexact=query))
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return render(request, 'chemical.html', {'precursor_chemicals': chemicals})
+    else:
+        return render(request, 'synthesischemical_list.html', {'precursor_chemicals': chemicals})

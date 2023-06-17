@@ -12,7 +12,7 @@
     }
 
     .content-table thead tr {
-        background-color: #009879;
+        background-color: #3070B3;
         color: #ffffff;
         text-align: left;
     }
@@ -31,15 +31,25 @@
     }
 
     .content-table tbody tr:last-of-type {
-        border-bottom: 2px solid #009879;
+        border-bottom: 2px solid #3070B3;
+    }
+
+    .btn-primary {
+        background-color: #3070B3;
+        border-color: #3070B3;
+    }
+
+    .btn-danger {
+        background-color: #B33030;
+        border-color: #B33030;
     }
 </style>
 
 <div class="btn-group justify-content-center" role="group" aria-label="Basic example">
-    <a href="{% url 'input' %}" class="btn btn-secondary m-2">Add more data</a>
-    <a href="{% url 'upload_file' %}" class="btn btn-secondary m-2">Input through file</a>
-    <a href="{% url 'index' %}" class="btn btn-secondary m-2">Search data</a>
-    <a href="{% url 'homepage' %}" class="btn btn-secondary m-2">Return to dashboard</a>
+    <a href="{% url 'input' %}" class="btn btn-secondary m-2" style="background-color: #3070B3; color: #ffffff;">Add more data</a>
+    <a href="{% url 'upload_file' %}" class="btn btn-secondary m-2" style="background-color: #3070B3; color: #ffffff;">Input through file</a>
+    <a href="{% url 'index' %}" class="btn btn-secondary m-2" style="background-color: #3070B3; color: #ffffff;">Search data</a>
+    <a href="{% url 'homepage' %}" class="btn btn-secondary m-2" style="background-color: #3070B3; color: #ffffff;">Return to dashboard</a>
 </div>
 
 

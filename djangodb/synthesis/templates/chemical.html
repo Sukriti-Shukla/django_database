@@ -1,0 +1,6 @@
+{% for chemical in precursor_chemicals %}
+    <h4>Lab Item Name: {{ chemical.labitemname }}</h4>
+    <p>Lab Item ID: {{ chemical.labitemid }}</p>
+    <p>Lab Item Type: {{ chemical.labitemtype }}</p>
+    <p>Lab Item Subtype: {{ chemical.labitemsubtype }}</p>
+{% endfor %}
