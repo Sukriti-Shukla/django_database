@@ -1,0 +1,170 @@
+<!-- synthesischemical_list.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-3 d-none d-md-block bg-light sidebar" id="sidebar">
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown mb-3">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Change Type
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'view_data' %}">Synthesis Chemical</a>
+                <a class="dropdown-item" href="{% url 'chemical_data' %}">Chemical</a>
+            </div>
+        </div>
+        <h2 class="my-4">Synthesized Materials</h2>
+        <!-- search form  -->
+        <form method="GET" action="{% url 'synthesis_search' %}" class="mb-3">
+            <div class="input-group">
+                <input type="text" class="form-control" name="q" placeholder="Search..." value="{{ request.GET.q }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="list-group">
+            {% for synthesischemical in synthesischemicals %}
+                <a href="#synthesischemical{{ synthesischemical.id }}" class="list-group-item list-group-item-action">{{ synthesischemical.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="col-md-9" id="content">
+        <button type="button" id="sidebarCollapse" class="btn btn-info d-md-none">
+            <i class="fas fa-align-left"></i>
+            <span>Toggle Sidebar</span>
+        </button>
+        <div class="synthesischemical-description">
+            <h2 class="my-4">Description</h2>
+            <div class="description-content">
+                {% for synthesischemical in synthesischemicals %}
+                    <div id="synthesischemical{{ synthesischemical.id }}" class="synthesischemical-details">
+                        <h4>Procedure type: {{ synthesischemical.proceduretype }}</h4>
+                        <h5>Procedure subtype: {{ synthesischemical.proceduresubtype }}</h5>
+                        <p>Description: {{ synthesischemical.description }}</p>
+                        <p>Synthesized by: {{ synthesischemical.synthesized_by }}</p>
+                        <p>Synthesized on: {{ synthesischemical.synthesized_on }}</p>
+                        <p>Added by: {{ synthesischemical.added_by }}</p>
+                        <p>Added on: {{ synthesischemical.added_on }}</p>
+                        <h6>Parameters:</h6>
+                        
+                            {% if synthesischemical.get_additional_fields %}
+                        <ul>
+                            {% for key, value in synthesischemical.get_additional_fields.items %}
+                                <li><strong>{{ key }}:</strong> {{ value }}</li>
+                            {% endfor %}
+                        </ul>
+                        
+                        {% endif %}
+                        {% if synthesischemical.files %}
+                            <p>files: {{ synthesischemical.files }}</p>
+                            <p><a href="{{ synthesischemical.files.url }}" download class="btn btn-secondary">Download Document</a></p>
+                        {% else %}
+                            <p>No files to download.</p>
+                        {% endif %}
+                        
+                        <h6>Precursors:</h6>
+                        <ul>
+                            {% for  precursor_id, precursor_info in synthesischemical.precursor_chemicals.items %}
+                            
+                            <li>ID: {{ precursor_id }}, Amount: {{ precursor_info.amount }} </li>
+                            
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <a href="{% url 'synthesis_input' %}" class="btn btn-secondary m-2">Add more data</a>
+    </div>
+</div>
+</div>
+
+        <style>
+            #sidebar.active {
+            display: none;
+        }
+
+        #sidebarCollapse {
+            margin-bottom: 10px;
+        }
+            .container-fluid {
+                padding: 20px;
+            }
+
+            .my-4 {
+                margin-top: 4rem;
+                margin-bottom: 4rem;
+            }
+
+            .list-group {
+                margin-bottom: 20px;
+            }
+
+            .list-group-item {
+                cursor: pointer;
+            }
+
+            .list-group-item:hover {
+                background-color: #f8f9fa;
+            }
+
+            .synthesischemical-description {
+                padding: 20px;
+                border: 1px solid #dee2e6;
+                background-color: #f8f9fa;
+            }
+
+            .description-content {
+                margin-top: 20px;
+            }
+
+            .synthesischemical-details {
+                display: none;
+            }
+
+            .synthesischemical-details.active {
+                display: block;
+            }
+
+            .precursors-details {
+                font-weight: bold;
+            }
+        </style>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const sidebar = document.getElementById('sidebar');
+                const content = document.getElementById('content');
+                const sidebarCollapse = document.getElementById('sidebarCollapse');
+
+                const synthesischemicals = document.querySelectorAll(".list-group-item");
+                const synthesischemicalDetails = document.querySelectorAll(".synthesischemical-details");
+
+                synthesischemicals.forEach(function (item, index) {
+                    item.addEventListener("click", function (event) {
+                        event.preventDefault();
+
+                        // Show the clicked synthesized material's description and hide others
+                        synthesischemicalDetails.forEach(function (detail) {
+                            detail.classList.remove("active");
+                        });
+                        synthesischemicalDetails[index].classList.add("active");
+                    });
+                });
+
+                // Sidebar toggle
+                sidebarCollapse.addEventListener('click', function () {
+            sidebar.classList.toggle('active');
+        });
+            });
+        </script>
+    {% endblock %}

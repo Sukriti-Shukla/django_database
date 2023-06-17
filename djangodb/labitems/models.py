@@ -25,9 +25,7 @@ class Chemical(models.Model):
             return json.loads(self.additional_fields)
         return {}
 
-    # def save(self, *args, **kwargs):
-    #     self.additional_fields = json.dumps(self.additional_fields)
-    #     super().save(*args, **kwargs)
+    
     def save(self, *args, **kwargs):
         if isinstance(self.additional_fields, dict):
             self.additional_fields = json.dumps(self.additional_fields)

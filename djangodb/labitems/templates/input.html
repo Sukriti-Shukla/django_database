@@ -118,24 +118,6 @@ function handleAdditionalFieldKeyChange() {
         customFieldInput.hide();
     }
 }
-// function fetchSuggestedFields(subtype) {
-//     $.get("/fetch_subtype_fields/" + subtype.replace(" ", "_") + "/").done(function(data) {
-//         var suggestedFieldsDiv = $("#suggested-fields");
-//         suggestedFieldsDiv.empty();
-
-//         $.each(data, function(index, field) {
-//             var inputHtml = `
-//                 <div class="mb-3">
-//                     <label for="${field}" class="form-label">${field}</label>
-//                     <input type="text" class="form-control" id="${field}" name="${field}" placeholder="${field}">
-//                 </div>
-//             `;
-//             suggestedFieldsDiv.append(inputHtml);
-//         });
-//     }).fail(function() {
-//         console.log("Failed to fetch suggested fields for subtype: " + subtype);
-//     });
-// }
 
 // This will populate the subtype select field based on the selected type
 function populateSubtypes() {
@@ -167,24 +149,6 @@ $(document).ready(function() {
     $('#labitemtype').change();
 });
 
-// $(document).ready(function() {
-//     $('#labitemsubtype').change(function() {
-//         var subtype = $(this).val();
-//         if (subtype) {
-//             $.get('{% url "fetch_subtype_fields" %}', { subtype: subtype }, function(data) {
-                
-//                 $('#suggested-fields').empty();
-//                 for (var i = 0; i < data.length; i++) {
-//                     $('#suggested-fields').append('<input type="text" name="' + data[i] + '" placeholder="' + data[i] + '">');
-//                 }
-//                 $('.additional-fields-section').show();
-//             });
-//         } else {
-//             $('#suggested-fields').empty();
-//             $('.additional-fields-section').hide();
-//         }
-//     });
-// });
 
 $("#labitemsubtype").change(function () {
     let subtype = $(this).val();

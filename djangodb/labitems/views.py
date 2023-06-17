@@ -69,39 +69,7 @@ def home(request):
     all_chemicals = Chemical.objects.all()
     return render(request, 'home.html', {'all': all_chemicals})
 
-# def input(request):
-#     if request.method == 'POST':
-#         form = ChemicalForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             additional_fields = {}
-#             for key, value in request.POST.items():
-#                 if key.startswith('additional_field'):
-#                     additional_fields[key] = value
-#             chemical = form.save(commit=False)
-#             chemical.json_data = json.dumps(additional_fields)
-#             chemical.save()
-#             messages.success(request, 'Item has been added to the database!')
-#             return redirect('home')
-#         else:
-#             messages.error(request, 'There was an error in your form. Please try again.')
-#     else:
-#         form = ChemicalForm()
-#     return render(request, 'input.html', {'form': form})
-# def get_suggested_fields(labitemsubtype):
-#     # Construct the file name based on the labitemsubtype
-#     yaml_file = f'{labitemsubtype.replace(" ", "_")}_fields.yaml'
-    
-#     
-#     yaml_file_path = os.path.join(settings.STATIC_ROOT, 'yaml', yaml_file)
-    
-#     with open(yaml_file_path, 'r') as file:
-#        
-#         suggested_fields = yaml.safe_load(file)
-        
-#     return suggested_fields
-# def fetch_subtype_fields(request, subtype):
-#     fields = get_suggested_fields(subtype.replace("-", " "))
-#     return JsonResponse(fields, safe=False)
+
 def get_suggested_fields(labitemsubtype):
     
     yaml_file = f'{labitemsubtype.replace(" ", "_")}_fields.yaml'

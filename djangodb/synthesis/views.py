@@ -32,29 +32,6 @@ def index(request):
     
     context = {'chemicals' : chemicals}
     return JsonResponse(list(chemicals), safe=False)
-# def search_precursors(request):
-#     query = request.GET.get('q', '')
-#     if query:
-#         chemicals = Chemical.objects.filter(Q(labitemname__icontains=query)).values('labitemid', 'labitemname')
-#         synthesis_chemicals = SynthesisChemical.objects.filter(Q(name__icontains=query)).values('id', 'name')
-#         precursors = list(chemicals) + list(synthesis_chemicals)
-#     else:
-#         chemicals = Chemical.objects.values('labitemid', 'labitemname')
-#         synthesis_chemicals = SynthesisChemical.objects.values('id', 'name')
-#         precursors = list(chemicals) + list(synthesis_chemicals)
-
-#     return JsonResponse(list(precursors), safe=False)
-# def search_precursors(request):
-#     print(request.GET) 
-#     query = request.GET.get('q', '')
-#     if query:
-#         precursors = Chemical.objects.filter(Q(labitemname__icontains=query)).values('labitemid', 'labitemname')
-#     else:
-#         precursors = Chemical.objects.values('labitemid', 'labitemname')
-
-#     return JsonResponse(list(precursors), safe=False)
-
-
 
 def search_precursors(request):
     print(request.GET) 
@@ -71,72 +48,19 @@ def search_precursors(request):
     return JsonResponse(precursors, safe=False)
 
 
-# def synthesis_input(request):
-#     chemicals = Chemical.objects.all()
-#     if request.method == 'POST':
-#         form = SynthesisForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             #return redirect('synthesis_list')  # replace with the name of the view you want to redirect to
-#     else:
-#         form = SynthesisForm()
-
-#     return render(request, 'synthesis_input.html', {'chemicals': chemicals, 'form': form})
-# from django.http import JsonResponse
-
-# def synthesis_input(request):
-#     chemicals = Chemical.objects.all()
-#     print(request.POST)
-#     if request.method == 'POST':
-#         form = SynthesisForm(request.POST)
-#         if form.is_valid():
-#             synthesis_chemical = form.save()
-#             return redirect('synthesis_input')  # replace with the name of the view you want to redirect to
-#     else:
-#         form = SynthesisForm()
-
-#     return render(request, 'synthesis_input.html', {'chemicals': chemicals, 'form': form})
-
-# def synthesis_input(request):
-#     chemicals = Chemical.objects.all()
-
-#     if request.method == 'POST':
-#         # Parse the JSON data for precursor_chemicals
-#         try:
-#             precursor_chemicals_json = request.POST.get('precursor_chemicals', '{}')
-#             precursor_chemicals = json.loads(precursor_chemicals_json)
-#         except json.JSONDecodeError:
-#             return HttpResponse("Error parsing JSON data for precursor chemicals", status=400)
-        
-#         # Create a mutable copy of POST data
-#         post_data = request.POST.copy()
-#         # Replace the 'precursor_chemicals' value with the parsed JSON data
-#         post_data['precursor_chemicals'] = precursor_chemicals
-
-#         form = SynthesisForm(post_data)
-#         if form.is_valid():
-#             synthesis_chemical = form.save()
-#             return redirect('synthesis_input')  # replace with the name of the view you want to redirect to
-#         else:
-#             # Optionally, handle the case where the form is not valid
-#             pass
-#     else:
-#         form = SynthesisForm()
-
-#     return render(request, 'synthesis_input.html', {'chemicals': chemicals, 'form': form})
 
 def synthesis_input(request):
     chemicals = Chemical.objects.all()
 
     if request.method == 'POST':
-        # Parse the JSON data for precursor_chemicals
+        
         try:
             precursor_chemicals_json = request.POST.get('precursor_chemicals', '{}')
             precursor_chemicals = json.loads(precursor_chemicals_json)
         except json.JSONDecodeError:
             return HttpResponse("Error parsing JSON data for precursor chemicals", status=400)
         
-        # Create a mutable copy of POST data
+       
         post_data = request.POST.copy()
         # Replace the 'precursor_chemicals' value with the parsed JSON data
         post_data['precursor_chemicals'] = precursor_chemicals
@@ -181,26 +105,21 @@ def synthesis_input(request):
             synthesis_chemical.custom_parameters= custom_names
             synthesis_chemical.additional_fields = additional_fields
             synthesis_chemical.save()
-            return redirect('synthesis_input')  # replace with the name of the view you want to redirect to
+            return redirect('synthesis_input')  
         else:
-            # Optionally, handle the case where the form is not valid
+            
             pass
     else:
         form = SynthesisForm()
 
     return render(request, 'synthesis_input.html', {'chemicals': chemicals, 'form': form})
 
-
-# def synthesischemical_list(request):
-#     synthesischemicals = SynthesisChemical.objects.all()
-#     return render(request, 'synthesischemical_list.html', {'synthesischemicals': synthesischemicals})
-
 def synthesischemical_list(request):
     synthesischemicals = SynthesisChemical.objects.all()
     chemicals = Chemical.objects.all()
-    # iterate over synthesischemicals and deserialize 'precursors' field
+    
     for chem in synthesischemicals:
-        if isinstance(chem.precursor_chemicals, str):  # check if it is a JSON string
+        if isinstance(chem.precursor_chemicals, str):
             chem.precursor_chemicals = json.loads(chem.precursor_chemicals)
 
     return render(request, 'synthesischemical_list.html', {'synthesischemicals': synthesischemicals, 'chemicals': chemicals})
@@ -210,9 +129,6 @@ def synthesischemical_search(request):
 
     synthesischemicals = SynthesisChemical.objects.filter(
         Q(name__icontains=query)
-        # Add more fields to search by if needed:
-        # | Q(synthesized_by__icontains=query)
-        # | Q(description__icontains=query)
     )
 
     return render(request, 'synthesischemical_list.html', {
