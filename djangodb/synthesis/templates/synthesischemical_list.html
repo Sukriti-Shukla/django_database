@@ -18,6 +18,10 @@
         <div class="list-group">
             {% for synthesischemical in synthesischemicals %}
                 <a href="#synthesischemical{{ synthesischemical.id }}" class="list-group-item list-group-item-action">{{ synthesischemical.name }}</a>
+                <!-- <a href="{% url 'synthesischemical_detail' synthesischemical.id %}">
+                    {{ synthesischemical.name }}
+                </a> -->
+
             {% endfor %}
         </div>
     </div>

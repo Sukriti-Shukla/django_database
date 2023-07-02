@@ -7,7 +7,7 @@ from .models import SynthesisChemical
 import json
 from django.http import HttpResponse
 from django.contrib.postgres.search import SearchQuery, SearchVector, SearchRank, SearchHeadline
-
+from django.shortcuts import get_object_or_404
 
 def search_chemicals(request):
     if 'term' in request.GET:
@@ -142,3 +142,10 @@ def precursor_list_search(request):
         return render(request, 'chemical.html', {'precursor_chemicals': chemicals})
     else:
         return render(request, 'synthesischemical_list.html', {'precursor_chemicals': chemicals})
+def synthesischemical_detail(request, synthesischemical_id):
+    synthesischemical = get_object_or_404(SynthesisChemical, pk=synthesischemical_id)
+
+    if isinstance(synthesischemical.precursor_chemicals, str):
+        synthesischemical.precursor_chemicals = json.loads(synthesischemical.precursor_chemicals)
+
+    return render(request, 'synthesischemical_detail.html', {'synthesischemical': synthesischemical})
